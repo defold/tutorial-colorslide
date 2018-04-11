@@ -1,0 +1,97 @@
+-- a few dummy properties used as timers.
+go.property("blink", 0)
+go.property("minimove", 0)
+go.property("micromove", 0)
+
+local look
+local blink
+local minimove
+local micromove
+
+look = function(self)
+	msg.post("eye_left#sprite", "play_animation", { id = hash("left_" .. self.state ) })
+	msg.post("eye_right#sprite", "play_animation", { id = hash("right_" .. self.state) })
+	msg.post("eyeball_left#sprite", "play_animation", { id = hash("eyeball_" .. self.state .. "_left" ) })
+	msg.post("eyeball_right#sprite", "play_animation", { id = hash("eyeball_" .. self.state .. "_right" ) })
+	msg.post("eyeball_left#sprite", "enable")
+	msg.post("eyeball_right#sprite", "enable")
+	
+	local wait = math.random(4, 20) / 2
+	go.animate("#", "blink", go.PLAYBACK_ONCE_FORWARD, 1, go.EASING_LINEAR, wait, 0, blink)
+end
+
+blink = function(self)
+	go.cancel_animations("#", "blink")
+	msg.post("eye_left#sprite", "play_animation", { id = hash("left_" .. self.state .. "_blink") })
+	msg.post("eye_right#sprite", "play_animation", { id = hash("right_" .. self.state .. "_blink") })
+	msg.post("eyeball_left#sprite", "disable")
+	msg.post("eyeball_right#sprite", "disable")
+
+	local wait = math.random() / 10 + 0.1
+	go.animate("#", "blink", go.PLAYBACK_ONCE_FORWARD, 1, go.EASING_LINEAR, wait, 0, look)
+end
+
+minimove = function(self)
+	local x = math.random() * 4 - 2
+	local y = math.random() * 2 - 1
+	local offset = vmath.vector3(x, y, 0)
+	
+	go.set_position(self.left_pos + offset, "eye_left")
+	go.set_position(self.right_pos + offset, "eye_right")
+	
+	local wait = math.random(5, 20) / 20
+	if self.state == "happy" then
+		wait = math.random(8, 20) / 15
+	end
+	go.animate("#", "minimove", go.PLAYBACK_ONCE_FORWARD, 1, go.EASING_LINEAR, wait, 0, minimove)	
+end
+
+micromove = function(self)
+	local s = math.random(98, 100) / 100
+
+	go.set_scale(s, "eye_left")
+	go.set_scale(s, "eye_right")
+
+	local wait = math.random() / 10
+	go.animate("#", "micromove", go.PLAYBACK_ONCE_FORWARD, 1, go.EASING_LINEAR, wait, 0, micromove)	
+end
+
+function init(self)
+	self.state = "angry"
+	
+	-- parent every part of the face to the brick for easy animation
+	local root = go.get_id("brick")
+	msg.post("eye_left", "set_parent", { parent_id = root })
+	msg.post("eye_right", "set_parent", { parent_id = root })
+	msg.post("eyeball_left", "set_parent", { parent_id = root })
+	msg.post("eyeball_right", "set_parent", { parent_id = root })
+	msg.post("mouth", "set_parent", { parent_id = root })
+	
+	msg.post("#", "start")
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("start") then
+		self.left_pos = go.get_position("eye_left")
+		self.right_pos = go.get_position("eye_right")
+		look(self)
+		minimove(self)		
+		micromove(self)		
+	elseif message_id == hash("set_state") then
+		self.state = message.state
+		msg.post("mouth#sprite", "play_animation", { id = hash("mouth_" .. self.state .. "_closed") })
+		blink(self)
+	elseif message_id == hash("start_drag") then
+		msg.post("mouth#sprite", "play_animation", { id = hash("mouth_" .. self.state .. "_open") })
+		go.set("eyeball_left#sprite", "scale.y", 0.8)
+		go.set("eyeball_right#sprite", "scale.y", 0.8)
+	elseif message_id == hash("end_drag") then
+		msg.post("mouth#sprite", "play_animation", { id = hash("mouth_" .. self.state .. "_closed") })
+		go.set("eyeball_left#sprite", "scale.y", 1)
+		go.set("eyeball_right#sprite", "scale.y", 1)
+	end
+end
+
+function on_reload(self)
+	msg.post("#", "end_drag")
+end

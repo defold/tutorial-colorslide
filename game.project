@@ -1,0 +1,14 @@
+[bootstrap]
+main_collection = /main/main.collectionc
+
+[project]
+title = defold-colorslide
+
+[display]
+width = 640
+height = 1136
+high_dpi = 1
+
+[sprite]
+max_count = 512
+

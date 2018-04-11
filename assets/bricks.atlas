@@ -1,0 +1,72 @@
+images {
+  image: "/assets/images/blue.png"
+}
+images {
+  image: "/assets/images/green.png"
+}
+images {
+  image: "/assets/images/grey.png"
+}
+images {
+  image: "/assets/images/red.png"
+}
+images {
+  image: "/assets/images/yellow.png"
+}
+images {
+  image: "/assets/images/eyeball_angry_left.png"
+}
+images {
+  image: "/assets/images/eyeball_angry_right.png"
+}
+images {
+  image: "/assets/images/eyeball_happy_left.png"
+}
+images {
+  image: "/assets/images/eyeball_happy_right.png"
+}
+images {
+  image: "/assets/images/left_angry.png"
+}
+images {
+  image: "/assets/images/left_angry_blink.png"
+}
+images {
+  image: "/assets/images/left_happy.png"
+}
+images {
+  image: "/assets/images/left_happy_blink.png"
+}
+images {
+  image: "/assets/images/right_angry.png"
+}
+images {
+  image: "/assets/images/right_angry_blink.png"
+}
+images {
+  image: "/assets/images/right_happy.png"
+}
+images {
+  image: "/assets/images/right_happy_blink.png"
+}
+images {
+  image: "/assets/images/mouth_angry_closed.png"
+}
+images {
+  image: "/assets/images/mouth_angry_open.png"
+}
+images {
+  image: "/assets/images/mouth_happy_closed.png"
+}
+images {
+  image: "/assets/images/mouth_happy_open.png"
+}
+images {
+  image: "/assets/images/logo.png"
+}
+images {
+  image: "/assets/images/button.png"
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0
