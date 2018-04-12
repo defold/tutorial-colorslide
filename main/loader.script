@@ -1,9 +1,12 @@
 function init(self)
-	msg.post("#proxy_level_1", "load")
+	msg.post(".", "acquire_input_focus")
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("proxy_loaded") then
+	if message_id == hash("load_level") then
+		local proxy = "#proxy_level_" .. message.level
+		msg.post(proxy, "load")		
+	elseif message_id == hash("proxy_loaded") then
 		msg.post(sender, "init")
 		msg.post(sender, "enable")
 	end

@@ -110,7 +110,7 @@ function on_input(self, action_id, action)
 			local x = math.ceil(action.x / 128)
 			local y = math.ceil(action.y / 128)
 			local brick_id = x .. ":" .. y
-			if empty_neighbor(brick_id, self.empty_slot) then
+			if empty_neighbor(brick_id, self.empty_slot) and self.bricks[brick_id] then
 				-- slide the brick into the empty space
 				local brick = self.bricks[brick_id].go
 				local empty_x = self.empty_slot.x
