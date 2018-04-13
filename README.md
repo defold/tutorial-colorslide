@@ -1,46 +1,54 @@
 # Color slide tutorial
 
-Welcome to the Colorslide game tutorial where you will learn how to build a simple GUI flow for a multi level game. This tutorial assumes that you know your way around the editor. Please check out one of our beginner tutorials if you are new to Defold and want to learn the basics.
+Welcome to the Colorslide game tutorial. It will take you through the process of adding a simple GUI flow to an existing multi level game. It is assumed that you know your way around the editor. If you don't, please check out one of our beginner tutorials if you are new to Defold and want to learn the basics.
 
-The starting point for this tutorial is this project that contains the following:
+The starting point for this tutorial is this project that contains everything you need to follow the tutorial.
 
-- A simple but fully playable game where the player needs to slide the bricks to the correct position.
-- 4 levels included of various difficulty. Each level is built in its own collection.
-- Assets so you can build any number of levels, using the built in tile editor.
-- The bricks have some personality coded into them.
-- When the player completes a level, the bricks jump happily and the player cannot slide them anymore.
+- A simple but fully playable game where the player needs to slide colored bricks on a tiled board until every brick's color matches the tile they sit on.
+- 4 levels are already included. They are of various difficulty. Each level is built in its own collection.
+- All game logic is already in place. The player can slide bricks until a winning position is reached.
+- Assets are included so you can build any number of levels, using the built in tile editor.
 
-What you will do in this tutorial is the following:
+After having finished the tutorial, you will have accomplished the following:
 
-- Add a start screen.
-- Add a level selection screen allowing the player to select and play any of the 4 levels.
-- Add navigation buttons between the screens.
+- You have added a level selection screen from where the player can start any of the 4 levels.
+- You have added a level completion message allowing the player to continue to the next level.
+- You have added a start screen.
+- You have added buttons so the user can navigate between these screens.
 
-Start by [trying the game](defold://build), then open ["main.collection"](defold://open?path=/main/main.collection) to see how the game is set up.
+## Understanding the game setup
+
+Before beginning the tutorial, [try running the game](defold://build), then open ["main.collection"](defold://open?path=/main/main.collection) to see how the game is set up.
 
 <img src="doc/main_collection.png" srcset="doc/main_collection@2x.png 2x">
 
-The whole game is contained in the subcollection inside "main.collection". Currently, "level" references the file "/main/level_2/level_2.collection". Inside the subcollection are two game objects:
+The whole game is contained in a subcollection called "level" inside "main.collection". Currently, "level" references the file "/main/level_2/level_2.collection". Opening the "level" collection file reveals two game objects:
 
-1. One game object (with id "board") holds the tilemap. Notice that there are two layers on the tilemap, one is the actual playfield ("board") and one contains the intitial setup for the bricks ("setup"). The game clears "setup" on start and replaces the brick tiles with separate game objects that can be animated freely.
+1. One game object with id "board". This one contains the tilemap. Notice that there are two layers on the tilemap, one is the actual playfield (with layer id "board") and one contains the intitial setup for the bricks (with layer id "setup"). When the game starts, it looks at the setup layer and replaces the brick tiles with separate game objects that can be animated freely. It then clears the layer.
 
-2. One game object (with id "level") contains the game logic script and a factory used to spawn bricks on game start. This game object is stored in a separate file called "/main/level.go" so it can be referenced in each separate level.
+2. One game object with id "level". This one contains the game logic script ("layer.script") and a factory used to spawn bricks on game start. This game object is stored in a separate file called "/main/level.go" so game objects of this blueprint file can be instantiated in each separate level collection.
 
-Now mark "level" in "main.collection" and change its reference in the *Path* property to "/main/level_3/level_3.collection". Build and run the game again (<kbd>Project ▸ Build</kbd>) and try playing that level.
+No try some of the other levels:
+
+Open "main.collection".
+
+Mark "level" change its reference in the *Path* property to "/main/level_3/level_3.collection".
+
+Build and run the game again (<kbd>Project ▸ Build</kbd>). Do the same for levels 1 and 4.
 
 ## Loading collections via proxy
 
-What you need is a way to select what collection to load and play during runtime. Defold contains two mechanisms for loading collections dynamically:
+What is needed for this game is a way to make the level loading automatic and depending on player choice. Defold contains two mechanisms for loading collections dynamically:
 
-1. Collection factories. This is a good choice for spawning hierarchies of objects into a running game. Any spawned object will be part of the startup main collection world and live until the game shuts down, unless you explicitly delete the objects yourself.
+1. Collection factories. This is a good choice for spawning hierarchies of objects into a running game, like enemy units, effects or interactive objects. Any spawned object will be part of the startup main collection world and live until the game shuts down, unless you explicitly delete the objects yourself.
 
-2. Collection proxies. This is a good choice when you want to load larger chunks of a game dynamically, for instance a game level. With a proxy you create a new "world" based on the collection. Any object that is spawned from the collection content will be part of the created world and be destroyed when the collection is unloaded from the proxy. The new world comes with an overhead so you should not use proxies to load many collections simultaneously.
+2. Collection proxies. This is a good choice when you want to load larger chunks of a game dynamically, for instance a game level. With a proxy you create a new "world" based on the collection. Any object that is spawned from the collection content will be part of the created world and be automatically destroyed when the collection is unloaded from the proxy. The new world that is created has an overhead cost attached to it so proxies are not a good fit for spawning large quantities of small collections simultaneously.
 
 For this game, proxies will be the best choice.
 
 Open "main.collection" and remove the "level" collection reference. Instead, add a new game object and give it id "loader".
 
-Add a collection proxy component to the game object and set its *Collection* property to "/main/level_1/level_1.collection".
+Add a collection proxy component to the game object, name it "proxy_level_1" and set its *Collection* property to "/main/level_1/level_1.collection".
 
 Add a new script file called "loader.script" and add it as a script component to the "loader" game object.
 
@@ -60,12 +68,12 @@ function on_message(self, message_id, message, sender)
     end
 end
 ```
-1. Send a message to the proxy component telling it to load its collection.
-2. When the proxy component is done loading, it sends a "proxy_loaded" message back, then it is fine to init and enable the collection. These messages can be sent to "sender" which is the proxy component.
+1. Send a message to the proxy component telling it to start loading its collection.
+2. When the proxy component is done loading, it sends a "proxy_loaded" message back. You can then send "init" and "enable" messages to the collection to initialize and enable the collection content. We can send these messages back to "sender" which is the proxy component.
 
 Now try to run the game.
 
-Unfortunately there is an instant error in the console:
+Unfortunately there is an instant error. The console says:
 
 ```
 ERROR:GAMEOBJECT: The collection 'default' could not be created since there is 
@@ -74,17 +82,24 @@ WARNING:RESOURCE: Unable to create resource: /main/level_1/level_1.collectionc
 ERROR:GAMESYS: The collection /main/level_1/level_1.collectionc could not be loaded.
 ```
 
-The error occurs because the proxy tries to create a new world (socket) named "default". One such world already exists - the one created from "main.collection" att engine boot. The socket name is set in the properties of the collection root so it's easy to fix:
-
-<img src="doc/socket_name.png" srcset="doc/socket_name@2x.png 2x">
+This error occurs because the proxy tries to create a new world (socket) with the name "default". But a world with that name already exists - the one created from "main.collection" at engine boot. The socket name is set in the properties of the collection root so it's very easy to fix:
 
 Open the file "/main/level_1/level_1.collection", mark the root of the collection and set the *Id* property to "level_1". Save the file.
 
-Try try running the game again.
+<img src="doc/socket_name.png" srcset="doc/socket_name@2x.png 2x">
 
-The level should show up, but if you try to click on the board and move a tile, nothing happens. Why?
+Try running the game again.
 
-The problem is that the script that deals with input is now inside the proxied world. The input system works so that it sends input to game objects in the bootstrap collection that listens to input. If one of these listeners contains a proxy, input is directed to any listeners in the collection behind the proxy. So in order to get input into the proxy collection, simply add a line to the loader script's `init()` function:
+The level now shows up, but if you try to click on the board to move a tile, nothing happens. Why is that?
+
+The problem is that the script that deals with input is now inside the proxied world. The input system works like this: 
+
+* It sends input to all game objects in the bootstrap collection that has acquired input focus.
+* If one of these objects listening to input contains a proxy, input is directed to any object in the game world behind the proxy that has acquired input focus.
+
+So in order to get input into the proxied collection, the game object that contains the proxy component must listen to input.
+
+Open "loader.script" and add a line to the `init()` function:
 
 ```
 function init(self)
@@ -96,43 +111,46 @@ end
 
 Run the game again. Now everything should work as expected.
 
-The game contains four levels so you need to add proxies for the remaining three levels. That is a matter of just repeating what you just did. Don't forget to change the *Id* property to a unique name for each level collection.
+Because the game contains four levels you need to add proxy components for the remaining three levels. Don't forget to change the *Id* property to a unique name for each level collection so the socket names don't collide when a proxy loads.
 
 <img src="doc/main_proxies.png" srcset="doc/main_proxies@2x.png 2x">
 
-Test each level by altering the proxy component you send the "load" message (`msg.post("#proxy_level_2", "load")` for instance) before moving on.
+Test that each level loads by altering the proxy component you send the "load" message:
+
+* `msg.post("#proxy_level_1", "load")`
+* `msg.post("#proxy_level_2", "load")`
+* `msg.post("#proxy_level_3", "load")`
+* `msg.post("#proxy_level_4", "load")`
 
 ## The level selection screen
 
-Now you have the setup required to load any level and it is time to construct an interface to the level loading.
+Now you have built the setup required to load any at any moment so it is time to construct an interface to the level loading.
 
 Create a new GUI file and call it "level_select.gui".
 
 Add "headings" to the *Font* section and the "bricks" atlas to the *Textures* section of the GUI.
 
-Construct an interface with 4 buttons, one for each level. It's practical to create one root node for each button and put the graphics and text as children to each root node:
+Construct an interface with 4 buttons, one for each level. It's practical to create one root node for each button and put the graphics and text as children to each root node. Then make sure the root node is big enough to cover the whole button graphics so you can use it to test input against:
 
 <img src="doc/level_select.png" srcset="doc/level_select@2x.png 2x">
 
 Create a new GUI script file and call it "level_select.gui_script".
-
-Open "level_select.gui" and set the *Script* property on the root node to the new script.
 
 Open "level_select.gui_script" and change the script to the following:
 
 ```lua
 function init(self)
     msg.post(".", "acquire_input_focus")
-    msg.post("#level_select", "show_level_select")                      -- [1]
+    msg.post("#", "show_level_select")                                  -- [1]
     self.active = false
 end
 
 function on_message(self, message_id, message, sender)
     if message_id == hash("show_level_select") then                     -- [2]
-        msg.post("#level_select", "enable")
+        msg.post("#", "enable")
         self.active = true
     elseif message_id == hash("hide_level_select") then                 -- [3]
-        msg.post("#level_select", "disable")
+        msg.post("#", "disable")
         self.active = false
     end
 end
@@ -143,21 +161,27 @@ function on_input(self, action_id, action)
             local node = gui.get_node("level_" .. n)
             if gui.pick_node(node, action.x, action.y) then             -- [5]
                 msg.post("/loader#loader", "load_level", { level = n }) -- [6]
-                msg.post("#level_select", "hide_level_select")          -- [7]
+                msg.post("#", "hide_level_select")                      -- [7]
             end
         end
     end
 end
 ```
 1. Set up the GUI.
-2. Showing and hiding the gui is triggered via messaging so it can be done from other scripts.
-3. React to the pressing of touch input (as set up in the input bindings).
-4. The button nodes are named "level_1" to "level_4" so you can loop this.
-5. Check if the touch action happens within the boundaries of level_n, i.e. the button is pressed.
-6. Send a message to the loader script to load level n. Notice that a "load" message is not sent directly to the proxy from here since this script does not deal with the rest of the proxy loading logic (reaction to "proxy_loaded).
+2. Showing and hiding the GUI is triggered via messaging so it can be done from other scripts.
+3. React to the pressing of touch input (as already set up in the [input bindings](defold://open?path=/input/game.input_binding)).
+4. The button nodes are named "level_1" to "level_4" so they can be looped over.
+5. Check if the touch action happens within the boundaries of node "level_n". This means that the click happenen on the button.
+6. Send a message to the loader script to load level `n`. Notice that a "load" message is not sent directly to the proxy from here since this script does not deal with the rest of the proxy loading logic, as a reaction to "proxy_loaded".
 7. Hide this GUI.
 
-The loader script needs a bit of new code to react to the "load_level" message, and the proxy loading on init should be removed. Open "loader.script" and change the `init()` and `on_message()` functions:
+Open "level_select.gui" and set the *Script* property on the root node to the new script.
+
+<img src="doc/level_select_script.png" srcset="doc/level_select_script@2x.png 2x">
+
+To finish off this step, the loader script needs a bit of new code to react to the "load_level" message, and the proxy loading on init should be removed.
+
+Open "loader.script" and change the `init()` and `on_message()` functions:
 
 ```lua
 function init(self)
@@ -180,11 +204,11 @@ Open "main.collection" and add a new game object with id "guis".
 
 Add "level_select.gui" as a GUI component to the new "guis" game object.
 
-Run the game and test the flow. You should be able to click any of the level buttons and the corresponding level will load and be playable.
+Run the game and test the level selector screen. You should be able to click any of the level buttons and the corresponding level will load and be playable.
 
 ## In game GUI
 
-You can now select a level and play it but there is no way to go back. The next step is to add an in game GUI that allows you to navigate back to the level selection screen. It should also congratulate the player when the level is completed and allow moving directly to the next level.
+You can now start and play a level but there is no way to go back. The next step is to add an in game GUI that allows you to navigate back to the level selection screen. It should also congratulate the player when the level is completed and allow moving directly to the next level:
 
 Create a new GUI file and call it "level.gui".
 
@@ -192,13 +216,11 @@ Add "headings" to the *Font* section and the "bricks" atlas to the *Textures* se
 
 Build one back-button at the top and one level number indicator at the top.
 
-Build a level complete message with a well done message and a next-button. Child these to a panel (a colored box node) and place it outside of the view so they can be slid into view when the level is completed:
+Build a level complete message with a "well done" message and a "next"-button. Child these to a panel (a colored box node), call it "done" and place it outside of the view so they can be slid into view when the level is completed:
 
 <img src="doc/level_gui.png" srcset="doc/level_gui@2x.png 2x">
 
 Create a new GUI script file and call it "level.gui_script".
-
-Open "level.gui" and set the *Script* property on the root node to the new script.
 
 Open "level.gui_script" and change the script to the following:
 
@@ -225,10 +247,12 @@ function on_input(self, action_id, action)                              -- [2]
     end
 end
 ```
-1. If message "level_complete" is received, slide the "done" panel with the next button into view.
-2. We are going to put this GUI on the "level" game object which already acquires input focus in "level.script" so this script should not do that.
-3. If the player presses "back", tell the level selector to show itself and the loader to unload the level.
+1. If message "level_complete" is received, slide the "done" panel with the "next" button into view.
+2. This GUI will be put on the "level" game object which already acquires input focus (through  "level.script") so this script should not do that.
+3. If the player presses "back", tell the level selector to show itself and the loader to unload the level. Note that the socket name of the bootstrap collection is used in the address.
 4. If the player presses "next", tell the loader to load the next level.
+
+Open "level.gui" and set the *Script* property on the root node to the new script.
 
 Open "loader.script" and change it to the following:
 
@@ -275,13 +299,13 @@ Open "level.script" and add a message to the level gui when the game is finished
 ```
 1. Tell the GUI to show the level completed panel.
 
-Finally, open "level.go" and add "level.gui" as a GUI component to the game object.
+Finally, open "level.go" and add "level.gui" as a GUI component to the game object. Make sure to set the *Id* property of the component to "gui".
 
 Run the game. You should be able to select a game, go back to the level selection screen (with the "back" button) and also start the next level when one is finished.
 
 ## Start screen
 
-The final piece of the puzzle is the start screen. At this moment, it should be very straightforward.
+The final piece of the puzzle is the start screen:
 
 Create a new GUI file and call it "start.gui".
 
@@ -293,22 +317,20 @@ Build the front screen. Add logo and a "start" button:
 
 Create a new GUI script file and call it "start.gui_script".
 
-Open "start.gui" and set the *Script* property on the root node to the new script.
-
 Open "start.gui_script" and change the script to the following:
 
 ```lua
 function init(self)
-    msg.post("#start", "show_start")                                         -- [1]
-    self.active = false 
+    msg.post("#", "show_start")                                         -- [1]
+    self.active = false
 end
 
 function on_message(self, message_id, message, sender)
     if message_id == hash("show_start") then                            -- [2]
-        msg.post("#start", "enable")
+        msg.post("#", "enable")
         self.active = true
     elseif message_id == hash("hide_start") then
-        msg.post("#start", "disable")
+        msg.post("#", "disable")
         self.active = false
     end
 end
@@ -317,7 +339,7 @@ function on_input(self, action_id, action)
     if action_id == hash("touch") and action.pressed and self.active then
         local start = gui.get_node("start")
         if gui.pick_node(start, action.x, action.y) then                -- [3]
-            msg.post("#start", "hide_start")
+            msg.post("#", "hide_start")
             msg.post("#level_select", "show_level_select")
         end
     end
@@ -325,7 +347,9 @@ end
 ```
 1. Start by showing this screen.
 2. Messages to show and hide this screen.
-3. If the player presses the "start" button, hide this screen and show the level selection gui.
+3. If the player presses the "start" button, hide this screen and tell the level selection GUI to show itself.
+
+Open "start.gui" and set the *Script* property on the root node to the new script.
 
 Open "main.collection" and add "start.gui" as a GUI component to the "guis" game object.
 
@@ -333,10 +357,9 @@ Now open "level_select.gui" and add a "back" button. You can copy and paste the 
 
 <img src="doc/level_select_back.png" srcset="doc/level_select_back@2x.png 2x">
 
-Open "level_select.gui_script" and add the code for returning to the start screen:
+Open "level_select.gui_script" and add the code for returning to the start screen in `on_input()`:
 
 ```lua
-
 function on_input(self, action_id, action)
     if action_id == hash("touch") and action.pressed and self.active then
         for n = 1,4 do
@@ -357,23 +380,38 @@ end
 ```
 1. Check if the player clicks "back". If so, hide this GUI and show the start screen.
 
+Also edit the `init()` function so the level select GUI is hidden on startup.
+
+```
+function init(self)
+    msg.post(".", "acquire_input_focus")
+    msg.post("#", "hide_level_select")                                  -- [1]
+    self.active = false
+end
+```
+1. Hide the GUI on startup
+
 And that's it. You are done! Run the game and verify that everything works as expected.
 
 ## What next?
 
-This GUI implementation is very simple. Each screen deals with its own state and contains the code to take you to other screens. Messages are sent between the GUI components to handle this. If your game does not feature advanced GUI flows this method is sufficient and clear enough. However, for more advanced GUIs you might want to use some sort of screen manager. Either roll your own or include one as a library. Check out https://www.defold.com/community/assets/ for community written libraries.
+This GUI implementation is pretty simple. Each screen deals with its own state and contains the code to hand over control to the next screen by sending messages to the other GUI component.
+
+If your game does not feature advanced GUI flows this method is sufficient and clear enough. However, for advanced GUIs things can get hairy and in that case you might want to use some sort of screen manager that controls the flow from a central location. You can either roll your own or include an existing one as a library. Check out https://www.defold.com/community/assets/ for community written GUI libraries.
 
 If you want to continue experimenting with this tutorial project, here are some exercise suggestions:
 
-1. Add navigation back to the main menu from the level selection screen.
-2. Implement locking/unlocking of levels: only allow the player to select and play unlocked levels and unlock them one by one as the game progresses.
-3. Take care of the case where the player completes the last level and there is no "next" one.
-4. Create so many levels that they won't fit on one level selection screen and solve that problem.
+1. You may have noticed that the "Level 1" header while playing a level is static. Add functionality so the header text shows the correct level number.
+2. Implement unlocking of levels. Start the game with all but the first level locked and unlock them one by one as the game progresses.
+3. Implement saving of the level unlock progression state.
+4. Fix the case where the player completes the last level and there is no "next" one.
+5. Use GUI templates to create the buttons.
+5. Make the buttons response visually (react to press) and with sound.
+5. Create a solution to when there are more levels than what can fit the screen.
 
 Check out [the documentation pages](https://defold.com/learn) for more examples, tutorials, manuals and API docs.
 
 If you run into trouble, help is available in [our forum](https://forum.defold.com).
 
 Happy Defolding!
-
 ---
