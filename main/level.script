@@ -1,10 +1,5 @@
-go.property("dummy", 0)
-
 local colors = require("main.colors")
 
--- make empty slot object with the id of potential neighbors
--- so we can quickly check if a brick can possibly slide to the
--- empty slot.
 local function make_empty_slot(x, y)
 	local l = x - 1 .. ":" .. y
 	local r = x + 1 .. ":" .. y
@@ -13,14 +8,10 @@ local function make_empty_slot(x, y)
 	return { x = x, y = y, neighbors = { l, r, u, d } }
 end
 
--- make a brick object containing go id and whether it's
--- on the correct color.
 local function make_brick(brick_go, color, correct)
 	return { go = brick_go, color = color, correct = correct}
 end
 
--- check an id against an empty slot object to see if it
--- neighbors it.
 local function empty_neighbor(id, empty)
 	for i, v in ipairs(empty.neighbors) do
 		if id == v then
@@ -34,8 +25,6 @@ local function brick_pos(x, y)
 	return vmath.vector3(x * 128 - 64, y * 128 - 64, 0.01)
 end
 
--- iterate through the level tilemap's "setup" layer and replace every tile with
--- a game object of the right type
 local function populate_level(self)
 	local x, y, w, h = tilemap.get_bounds("board#tiles")
 
@@ -47,35 +36,27 @@ local function populate_level(self)
 			-- clear the setup layer tile
 			tilemap.set_tile("board#tiles", "setup", ix, iy, 0)
 
-			-- calculate where to place the brick			
 			local pos = brick_pos(ix, iy)
 			local props = {}
 			if brick_color > 0 then
 				props[hash("/brick")] = { color = brick_color }
-				-- we're spawning a collection of game objects. it will set up its parent-
-				-- child hierarchy on init so we don't have to bother.
 				local ids = collectionfactory.create("#brickfactory", pos, nil, props)
 
-				-- store the root object ("brick") for each instance. don't care for the
-				-- child objects since they will all be deleted when the level shuts down
-				-- (as long as it's loaded via proxy)
+				-- store the root object ("brick") for each instance.
 				local brick = ids[hash("/brick")]
 				local correct = colors.compare(brick_color, board_color)
 				self.bricks[ix .. ":" .. iy] = make_brick(brick, brick_color, correct)
-
-				-- set initial state for brick
+				
 				msg.post(brick, "on_correct_color", { correct = correct })
 			end
 
 			if brick_color == 0 and board_color > 0 then
-				-- here is the empty slot, keep track of it
 				self.empty_slot = make_empty_slot(ix, iy)
 			end
 		end
 	end
 end
 
--- check bricks if all are on the correct color
 local function all_correct(bricks)
 	for k, b in pairs(bricks) do
 		if not b.correct then
@@ -85,7 +66,6 @@ local function all_correct(bricks)
 	return true
 end
 
--- make the bricks bounce up and down
 local function bounce(bricks)
 	for k, b in pairs(bricks) do
 		local brick = b.go
@@ -94,8 +74,6 @@ local function bounce(bricks)
 		go.animate(brick, "position.y", go.PLAYBACK_LOOP_PINGPONG, pos.y + 30, go.EASING_OUTSINE, 0.33, delay)
 	end
 end
-
--- LIFECYCLE
 
 function init(self)
 	self.bricks = {}
@@ -129,16 +107,13 @@ function on_input(self, action_id, action)
 				-- animate the brick into place
 				local target = brick_pos(empty_x, empty_y)
 				go.animate(brick, "position", go.PLAYBACK_ONCE_FORWARD, target, go.EASING_INOUTQUAD, 0.2, 0, function()
-					-- update the brick state
 					msg.post(brick, "on_correct_color", { correct = correct })
 
-					-- start bouncing after final animation is done
 					if self.completed then
 						bounce(self.bricks)
 					end
 				end)
 				
-				-- check if the board is solved
 				if all_correct(self.bricks) then
 					self.completed = true
 				end

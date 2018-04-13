@@ -1,12 +1,11 @@
 # Color slide tutorial
 
-Welcome to the Colorslide game tutorial. It will take you through the process of adding a simple GUI flow to an existing multi level game. It is assumed that you know your way around the editor. If you don't, please check out one of our beginner tutorials if you are new to Defold and want to learn the basics.
+Welcome to the Colorslide game tutorial. It will take you through the process of adding a simple GUI flow to an existing multi level game. It is assumed that you know your way around the editor. If you don't, please check out [our manuals and beginner tutorials](https://www.defold.com/learn).
 
-The starting point for this tutorial is this project that contains everything you need to follow the tutorial.
+The starting point for this tutorial is this project. It contains everything you need:
 
-- A simple but fully playable game where the player needs to slide colored bricks on a tiled board until every brick's color matches the tile they sit on.
-- 4 levels are already included. They are of various difficulty. Each level is built in its own collection.
-- All game logic is already in place. The player can slide bricks until a winning position is reached.
+- A simple but fully playable game where the player slides colored bricks on a tiled board until every brick's color matches the tile they sit on.
+- 4 example levels are included. They are of various difficulty. Each level is built in its own collection.
 - Assets are included so you can build any number of levels, using the built in tile editor.
 
 After having finished the tutorial, you will have accomplished the following:
