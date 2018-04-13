@@ -140,7 +140,6 @@ function on_input(self, action_id, action)
 				
 				-- check if the board is solved
 				if all_correct(self.bricks) then
-					msg.post("#gui", "level_completed")
 					self.completed = true
 				end
 			end

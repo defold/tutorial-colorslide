@@ -1,4 +1,4 @@
-name: "level_2"
+name: "default"
 instances {
   id: "level"
   prototype: "/main/level.go"
