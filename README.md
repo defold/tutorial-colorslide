@@ -1,6 +1,6 @@
 # Color slide tutorial
 
-Welcome to the Colorslide game tutorial where you will learn how to build a GUI flow for a multi level game. This tutorial assumes that you know your way around the editor. Please check out one of our beginner tutorials if you are new to Defold and want to learn the basics.
+Welcome to the Colorslide game tutorial where you will learn how to build a simple GUI flow for a multi level game. This tutorial assumes that you know your way around the editor. Please check out one of our beginner tutorials if you are new to Defold and want to learn the basics.
 
 The starting point for this tutorial is this project that contains the following:
 
@@ -68,7 +68,8 @@ Now try to run the game.
 Unfortunately there is an instant error in the console:
 
 ```
-ERROR:GAMEOBJECT: The collection 'default' could not be created since there is already a socket with the same name.
+ERROR:GAMEOBJECT: The collection 'default' could not be created since there is 
+already a socket with the same name.
 WARNING:RESOURCE: Unable to create resource: /main/level_1/level_1.collectionc
 ERROR:GAMESYS: The collection /main/level_1/level_1.collectionc could not be loaded.
 ```
@@ -107,7 +108,7 @@ Now you have the setup required to load any level and it is time to construct an
 
 Create a new GUI file and call it "level_select.gui".
 
-Add "headings" to the *Font* section and the "bricks" atlas to the *Textures* section of the gui.
+Add "headings" to the *Font* section and the "bricks" atlas to the *Textures* section of the GUI.
 
 Construct an interface with 4 buttons, one for each level. It's practical to create one root node for each button and put the graphics and text as children to each root node:
 
@@ -121,26 +122,28 @@ Open "level_select.gui_script" and change the script to the following:
 
 ```lua
 function init(self)
-    msg.post("#", "show_select_level")                                  -- [1]
+    msg.post(".", "acquire_input_focus")
+    msg.post("#level_select", "show_level_select")                      -- [1]
+    self.active = false
 end
 
 function on_message(self, message_id, message, sender)
-    if message_id == hash("show_select_level") then                     -- [2]
-        msg.post(".", "acquire_input_focus")
-        msg.post(".", "enable")
-    elseif message_id == hash("hide_select_level") then                 -- [2]
-        msg.post(".", "release_input_focus")
-        msg.post(".", "disable")
+    if message_id == hash("show_level_select") then                     -- [2]
+        msg.post("#level_select", "enable")
+        self.active = true
+    elseif message_id == hash("hide_level_select") then                 -- [3]
+        msg.post("#level_select", "disable")
+        self.active = false
     end
 end
 
 function on_input(self, action_id, action)
-    if action_id == hash("touch") and action.pressed then               -- [3]
+    if action_id == hash("touch") and action.pressed and self.active then
         for n = 1,4 do                                                  -- [4]
             local node = gui.get_node("level_" .. n)
             if gui.pick_node(node, action.x, action.y) then             -- [5]
                 msg.post("/loader#loader", "load_level", { level = n }) -- [6]
-                msg.post("#", "hide_select_level")                      -- [7]
+                msg.post("#level_select", "hide_level_select")          -- [7]
             end
         end
     end
@@ -154,9 +157,13 @@ end
 6. Send a message to the loader script to load level n. Notice that a "load" message is not sent directly to the proxy from here since this script does not deal with the rest of the proxy loading logic (reaction to "proxy_loaded).
 7. Hide this GUI.
 
-The loader script needs a bit of new code to react to the "load_level" message. Open "loader.script" and change the `on_message()` function:
+The loader script needs a bit of new code to react to the "load_level" message, and the proxy loading on init should be removed. Open "loader.script" and change the `init()` and `on_message()` functions:
 
 ```lua
+function init(self)
+    msg.post(".", "acquire_input_focus")
+end
+
 function on_message(self, message_id, message, sender)
     if message_id == hash("load_level") then
         local proxy = "#proxy_level_" .. message.level                  -- [1]
@@ -169,13 +176,201 @@ end
 ```
 1. Construct which proxy to load based on message data.
 
+Open "main.collection" and add a new game object with id "guis".
+
+Add "level_select.gui" as a GUI component to the new "guis" game object.
+
 Run the game and test the flow. You should be able to click any of the level buttons and the corresponding level will load and be playable.
 
+## In game GUI
 
+You can now select a level and play it but there is no way to go back. The next step is to add an in game GUI that allows you to navigate back to the level selection screen. It should also congratulate the player when the level is completed and allow moving directly to the next level.
 
-----
+Create a new GUI file and call it "level.gui".
 
-Check out [the documentation pages](https://defold.com/learn) for examples, tutorials, manuals and API docs.
+Add "headings" to the *Font* section and the "bricks" atlas to the *Textures* section of the GUI.
+
+Build one back-button at the top and one level number indicator at the top.
+
+Build a level complete message with a well done message and a next-button. Child these to a panel (a colored box node) and place it outside of the view so they can be slid into view when the level is completed:
+
+<img src="doc/level_gui.png" srcset="doc/level_gui@2x.png 2x">
+
+Create a new GUI script file and call it "level.gui_script".
+
+Open "level.gui" and set the *Script* property on the root node to the new script.
+
+Open "level.gui_script" and change the script to the following:
+
+```lua
+function on_message(self, message_id, message, sender)
+    if message_id == hash("level_completed") then                       -- [1]
+        local done = gui.get_node("done")
+        gui.animate(done, "position.x", 320, gui.EASING_OUTSINE, 1, 1.5)
+    end
+end
+
+function on_input(self, action_id, action)                              -- [2]
+    if action_id == hash("touch") and action.pressed then
+        local back = gui.get_node("back")
+        if gui.pick_node(back, action.x, action.y) then
+            msg.post("default:/guis#level_select", "show_level_select")  -- [3]
+            msg.post("default:/loader#loader", "unload_level")
+        end
+
+        local next = gui.get_node("next")
+        if gui.pick_node(next, action.x, action.y) then
+            msg.post("default:/loader#loader", "next_level")            -- [4]
+        end
+    end
+end
+```
+1. If message "level_complete" is received, slide the "done" panel with the next button into view.
+2. We are going to put this GUI on the "level" game object which already acquires input focus in "level.script" so this script should not do that.
+3. If the player presses "back", tell the level selector to show itself and the loader to unload the level.
+4. If the player presses "next", tell the loader to load the next level.
+
+Open "loader.script" and change it to the following:
+
+```lua
+function init(self)
+    msg.post(".", "acquire_input_focus")
+    self.current_level = 0                                              -- [1]
+end
+
+function on_message(self, message_id, message, sender)
+    if message_id == hash("load_level") then
+        self.current_level = message.level
+        local proxy = "#proxy_level_" .. self.current_level
+        msg.post(proxy, "load")
+    elseif message_id == hash("next_level") then                        -- [2]
+        msg.post("#", "unload_level")
+        msg.post("#", "load_level", { level = self.current_level + 1 })
+    elseif message_id == hash("unload_level") then                      -- [3]
+        local proxy = "#proxy_level_" .. self.current_level
+        msg.post(proxy, "disable")
+        msg.post(proxy, "final")
+        msg.post(proxy, "unload")
+    elseif message_id == hash("proxy_loaded") then
+        msg.post(sender, "init")
+        msg.post(sender, "enable")
+    end
+end
+```
+1. Keep track of the currently loaded level so it can be unloaded and it is possible to advance to the next one.
+2. Load next level. Note that there is no check if there actually exists a next level.
+3. Unload the currently loaded level.
+
+Open "level.script" and add a message to the level gui when the game is finished at the end of `on_input()`:
+
+```lua
+                ...
+                -- check if the board is solved
+                if all_correct(self.bricks) then
+                    msg.post("#gui", "level_completed")                 -- [1]
+                    self.completed = true
+                end
+            end
+            ...
+```
+1. Tell the GUI to show the level completed panel.
+
+Finally, open "level.go" and add "level.gui" as a GUI component to the game object.
+
+Run the game. You should be able to select a game, go back to the level selection screen (with the "back" button) and also start the next level when one is finished.
+
+## Start screen
+
+The final piece of the puzzle is the start screen. At this moment, it should be very straightforward.
+
+Create a new GUI file and call it "start.gui".
+
+Add "headings" to the *Font* section and the "bricks" atlas to the *Textures* section of the GUI.
+
+Build the front screen. Add logo and a "start" button:
+
+<img src="doc/start_gui.png" srcset="doc/start_gui@2x.png 2x">
+
+Create a new GUI script file and call it "start.gui_script".
+
+Open "start.gui" and set the *Script* property on the root node to the new script.
+
+Open "start.gui_script" and change the script to the following:
+
+```lua
+function init(self)
+    msg.post("#start", "show_start")                                         -- [1]
+    self.active = false 
+end
+
+function on_message(self, message_id, message, sender)
+    if message_id == hash("show_start") then                            -- [2]
+        msg.post("#start", "enable")
+        self.active = true
+    elseif message_id == hash("hide_start") then
+        msg.post("#start", "disable")
+        self.active = false
+    end
+end
+
+function on_input(self, action_id, action)
+    if action_id == hash("touch") and action.pressed and self.active then
+        local start = gui.get_node("start")
+        if gui.pick_node(start, action.x, action.y) then                -- [3]
+            msg.post("#start", "hide_start")
+            msg.post("#level_select", "show_level_select")
+        end
+    end
+end
+```
+1. Start by showing this screen.
+2. Messages to show and hide this screen.
+3. If the player presses the "start" button, hide this screen and show the level selection gui.
+
+Open "main.collection" and add "start.gui" as a GUI component to the "guis" game object.
+
+Now open "level_select.gui" and add a "back" button. You can copy and paste the one you made in "level.gui" if you want.
+
+<img src="doc/level_select_back.png" srcset="doc/level_select_back@2x.png 2x">
+
+Open "level_select.gui_script" and add the code for returning to the start screen:
+
+```lua
+
+function on_input(self, action_id, action)
+    if action_id == hash("touch") and action.pressed and self.active then
+        for n = 1,4 do
+            local node = gui.get_node("level_" .. n)
+            if gui.pick_node(node, action.x, action.y) then
+                msg.post("/loader#loader", "load_level", { level = n })
+                msg.post("#level_select", "hide_level_select")
+            end
+        end
+
+        local back = gui.get_node("back")                               -- [1]
+        if gui.pick_node(back, action.x, action.y) then
+            msg.post("#level_select", "hide_level_select")
+            msg.post("#start", "show_start")
+        end
+    end
+end
+```
+1. Check if the player clicks "back". If so, hide this GUI and show the start screen.
+
+And that's it. You are done! Run the game and verify that everything works as expected.
+
+## What next?
+
+This GUI implementation is very simple. Each screen deals with its own state and contains the code to take you to other screens. Messages are sent between the GUI components to handle this. If your game does not feature advanced GUI flows this method is sufficient and clear enough. However, for more advanced GUIs you might want to use some sort of screen manager. Either roll your own or include one as a library. Check out https://www.defold.com/community/assets/ for community written libraries.
+
+If you want to continue experimenting with this tutorial project, here are some exercise suggestions:
+
+1. Add navigation back to the main menu from the level selection screen.
+2. Implement locking/unlocking of levels: only allow the player to select and play unlocked levels and unlock them one by one as the game progresses.
+3. Take care of the case where the player completes the last level and there is no "next" one.
+4. Create so many levels that they won't fit on one level selection screen and solve that problem.
+
+Check out [the documentation pages](https://defold.com/learn) for more examples, tutorials, manuals and API docs.
 
 If you run into trouble, help is available in [our forum](https://forum.defold.com).
 

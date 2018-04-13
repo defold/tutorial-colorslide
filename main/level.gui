@@ -1,4 +1,4 @@
-script: ""
+script: "/main/level.gui_script"
 fonts {
   name: "headings"
   font: "/assets/headings.font"
@@ -356,7 +356,7 @@ nodes {
   line_break: false
   parent: "done"
   layer: ""
-  inherit_alpha: true
+  inherit_alpha: false
   alpha: 1.0
   outline_alpha: 1.0
   shadow_alpha: 0.58

@@ -1,25 +1,33 @@
 function init(self)
-	msg.post("#", "show_select_level")
+	msg.post(".", "acquire_input_focus")
+	msg.post("#level_select", "hide_level_select")
+	self.active = false
 end
 
 function on_message(self, message_id, message, sender)
-	if message_id == hash("show_select_level") then
-		msg.post(".", "acquire_input_focus")
-		msg.post(".", "enable")
-	elseif message_id == hash("hide_select_level") then
-		msg.post(".", "release_input_focus")
-		msg.post(".", "disable")
+	if message_id == hash("show_level_select") then
+		msg.post("#level_select", "enable")
+		self.active = true
+	elseif message_id == hash("hide_level_select") then
+		msg.post("#level_select", "disable")
+		self.active = false
 	end
 end
 
 function on_input(self, action_id, action)
-	if action_id == hash("touch") and action.pressed then
+	if action_id == hash("touch") and action.pressed and self.active then
 		for n = 1,4 do
 			local node = gui.get_node("level_" .. n)
 			if gui.pick_node(node, action.x, action.y) then
 				msg.post("/loader#loader", "load_level", { level = n })
-				msg.post("#", "hide_select_level")
+				msg.post("#level_select", "hide_level_select")
 			end
+		end
+
+		local back = gui.get_node("back")
+		if gui.pick_node(back, action.x, action.y) then
+			msg.post("#level_select", "hide_level_select")
+			msg.post("#start", "show_start")
 		end
 	end
 end

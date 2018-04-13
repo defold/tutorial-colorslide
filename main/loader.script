@@ -1,23 +1,23 @@
 function init(self)
 	msg.post(".", "acquire_input_focus")
+	self.current_level = 0
 end
 
 function on_message(self, message_id, message, sender)
 	if message_id == hash("load_level") then
-		local proxy = "#proxy_level_" .. message.level
-		msg.post(proxy, "load")		
+		self.current_level = message.level
+		local proxy = "#proxy_level_" .. self.current_level
+		msg.post(proxy, "load")
+	elseif message_id == hash("next_level") then
+		msg.post("#", "unload_level")
+		msg.post("#", "load_level", {level = self.current_level + 1})
+	elseif message_id == hash("unload_level") then
+		local proxy = "#proxy_level_" .. self.current_level
+		msg.post(proxy, "disable")
+		msg.post(proxy, "final")
+		msg.post(proxy, "unload")
 	elseif message_id == hash("proxy_loaded") then
 		msg.post(sender, "init")
 		msg.post(sender, "enable")
 	end
-end
-
-function on_input(self, action_id, action)
-	-- Add input-handling code here
-	-- Remove this function if not needed
-end
-
-function on_reload(self)
-	-- Add reload-handling code here
-	-- Remove this function if not needed
 end
