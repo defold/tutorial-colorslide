@@ -2,7 +2,7 @@
 main_collection = /main/main.collectionc
 
 [project]
-title = Color Slide
+title = Colorslide
 
 [display]
 width = 640

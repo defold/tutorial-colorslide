@@ -1,6 +1,6 @@
-# Color Slide tutorial
+# Colorslide tutorial
 
-Welcome to the Color Slide game tutorial. It will take you through the process of adding a simple GUI flow to an existing multi level mobile game. It is assumed that you know your way around the editor. If you don't, please check out [our manuals and beginner tutorials](https://www.defold.com/learn).
+Welcome to the Colorslide game tutorial. It will take you through the process of adding a simple GUI flow to an existing multi level mobile game. It is assumed that you know your way around the editor. If you don't, please check out [our manuals and beginner tutorials](https://www.defold.com/learn).
 
 The starting point for this tutorial is this project. It contains everything you need:
 
