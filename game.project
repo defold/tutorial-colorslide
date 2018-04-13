@@ -2,7 +2,7 @@
 main_collection = /main/main.collectionc
 
 [project]
-title = defold-colorslide
+title = Color Slide
 
 [display]
 width = 640

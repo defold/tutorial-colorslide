@@ -1,6 +1,6 @@
-# Color slide tutorial
+# Color Slide tutorial
 
-Welcome to the Colorslide game tutorial. It will take you through the process of adding a simple GUI flow to an existing multi level game. It is assumed that you know your way around the editor. If you don't, please check out [our manuals and beginner tutorials](https://www.defold.com/learn).
+Welcome to the Color Slide game tutorial. It will take you through the process of adding a simple GUI flow to an existing multi level mobile game. It is assumed that you know your way around the editor. If you don't, please check out [our manuals and beginner tutorials](https://www.defold.com/learn).
 
 The starting point for this tutorial is this project. It contains everything you need:
 
@@ -405,8 +405,9 @@ If you want to continue experimenting with this tutorial project, here are some 
 3. Implement saving of the level unlock progression state.
 4. Fix the case where the player completes the last level and there is no "next" one.
 5. Use GUI templates to create the buttons.
-5. Make the buttons response visually (react to press) and with sound.
-5. Create a solution to when there are more levels than what can fit the screen.
+6. Make the buttons response visually (react to press) and with sound.
+7. Add sound to the game.
+8. Create a solution to when there are more levels than what fits the screen.
 
 Check out [the documentation pages](https://defold.com/learn) for more examples, tutorials, manuals and API docs.
 
