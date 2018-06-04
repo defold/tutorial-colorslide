@@ -127,9 +127,29 @@ Now you have built the setup required to load any at any moment so it is time to
 
 Create a new GUI file and call it "level_select.gui".
 
-Add "headings" to the *Font* section and the "bricks" atlas to the *Textures* section of the GUI.
+Add the "headings" font to the *Font* section of the GUI (<kbd>right click</kbd> the *Fonts* item in the outline and select <kbd>Add ▸ Fonts...</kbd>).
 
-Construct an interface with 4 buttons, one for each level. It's practical to create one root node for each button and put the graphics and text as children to each root node. Then make sure the root node is big enough to cover the whole button graphics so you can use it to test input against:
+Add the "bricks" atlas to the *Textures* section of the GUI (<kbd>right click</kbd> the *Textures* item in the outline and select <kbd>Add ▸ Textures...</kbd>).
+
+Construct an interface with 4 buttons, one for each level. For each button:
+
+1. Create one root Box node (<kbd>right click</kbd> *Nodes* and select <kbd>Add ▸ Box</kbd>).
+2. Set the *Id* to "level_1".
+3. Set the *Size Mode* to `Manual` and the *Size* to 100, 100, 0.
+4. Set the *Alpha* to `0` so the node will be invisible.
+5. Create a child Box node to "level_1" (<kbd>right click</kbd> "level_1" and select <kbd>Add ▸ Box</kbd>).
+6. Set the *Id* of the child node to "1_bg".
+7. Set the *Texture* of the node to `bricks/button`.
+8. Uncheck *Inherit Alpha* on the node so it renders even if its parent is transparent.
+9. Create a child Text node to "level_1" (<kbd>right click</kbd> "level_1" and select <kbd>Add ▸ Text</kbd>).
+10. Set the *Id* of the child node to "1_text".
+11. Set the *Text* of the node to "1".
+12. Set the *Font* of the node to `headings`.
+13. Uncheck *Inherit Alpha* on the node so it renders even if its parent is transparent.
+
+If you change the size of your graphics make sure that each root node is big enough to cover the whole button graphics because the root node will be used to test input against.
+
+Repeat the above steps for all 4 level buttons and move each root node into position:
 
 <img src="doc/level_select.png" srcset="doc/level_select@2x.png 2x">
 
