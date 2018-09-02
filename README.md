@@ -83,7 +83,7 @@ ERROR:GAMESYS: The collection /main/level_1/level_1.collectionc could not be loa
 
 This error occurs because the proxy tries to create a new world (socket) with the name "default". But a world with that name already exists - the one created from "main.collection" at engine boot. The socket name is set in the properties of the collection root so it's very easy to fix:
 
-Open the file "/main/level_1/level_1.collection", mark the root of the collection and set the *Id* property to "level_1". Save the file.
+Open the file "/main/level_1/level_1.collection", mark the root of the collection and set the *Name* property to "level_1". And, mark the level.go and set the *Id* property to "level_1". Save the file.
 
 <img src="doc/socket_name.png" srcset="doc/socket_name@2x.png 2x">
 
