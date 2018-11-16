@@ -25,7 +25,7 @@ The whole game is contained in a subcollection called "level" inside "main.colle
 
 1. One game object with id "board". This one contains the tilemap. Notice that there are two layers on the tilemap, one is the actual playfield (with layer id "board") and one contains the intitial setup for the bricks (with layer id "setup"). When the game starts, it looks at the setup layer and replaces the brick tiles with separate game objects that can be animated freely. It then clears the layer.
 
-2. One game object with id "level". This one contains the game logic script ("layer.script") and a factory used to spawn bricks on game start. This game object is stored in a separate file called "/main/level.go" so game objects of this blueprint file can be instantiated in each separate level collection.
+2. One game object with id "level". This one contains the game logic script ("level.script") and a factory used to spawn bricks on game start. This game object is stored in a separate file called "/main/level.go" so game objects of this blueprint file can be instantiated in each separate level collection.
 
 No try some of the other levels:
 
