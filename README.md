@@ -27,7 +27,7 @@ The whole game is contained in a subcollection called "level" inside "main.colle
 
 2. One game object with id "level". This one contains the game logic script ("level.script") and a factory used to spawn bricks on game start. This game object is stored in a separate file called "/main/level.go" so game objects of this blueprint file can be instantiated in each separate level collection.
 
-No try some of the other levels:
+Now try some of the other levels:
 
 Open "main.collection".
 
