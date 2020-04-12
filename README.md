@@ -416,7 +416,7 @@ And that's it. You are done! Run the game and verify that everything works as ex
 
 This GUI implementation is pretty simple. Each screen deals with its own state and contains the code to hand over control to the next screen by sending messages to the other GUI component.
 
-If your game does not feature advanced GUI flows this method is sufficient and clear enough. However, for advanced GUIs things can get hairy and in that case you might want to use some sort of screen manager that controls the flow from a central location. You can either roll your own or include an existing one as a library. Check out https://www.defold.com/community/assets/ for community written GUI libraries.
+If your game does not feature advanced GUI flows this method is sufficient and clear enough. However, for advanced GUIs things can get hairy and in that case you might want to use some sort of screen manager that controls the flow from a central location. You can either roll your own or include an existing one as a library. Check out asset portal for community written [GUI libraries](https://defold.com/tags/stars/gui/).
 
 If you want to continue experimenting with this tutorial project, here are some exercise suggestions:
 
