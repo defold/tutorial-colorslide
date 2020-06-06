@@ -235,7 +235,7 @@ Add "headings" to the *Font* section and the "bricks" atlas to the *Textures* se
 
 Build one back-button at the top and one level number indicator at the top.
 
-Build a level complete message with a "well done" message and a "next"-button. Child these to a panel (a colored box node), call it "done" and place it outside of the view so they can be slid into view when the level is completed:
+Build a level complete message with a "well done" message and a "next"-button. Child these to a panel (a colored box node), call it "done" and place it outside of the view so they can be slide into view when the level is completed:
 
 <img src="doc/level_gui.png" srcset="doc/level_gui@2x.png 2x">
 
