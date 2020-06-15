@@ -149,7 +149,12 @@ Construct an interface with 4 buttons, one for each level. For each button:
 
 If you change the size of your graphics make sure that each root node is big enough to cover the whole button graphics because the root node will be used to test input against.
 
-Repeat the above steps for all 4 level buttons and move each root node into position:
+Repeat the above steps for all 4 level buttons and move each root node into position. Also add a text node header:
+
+1. Create one Text node (<kbd>right click</kbd> *Nodes* and select <kbd>Add ▸ Text</kbd>).
+2. Set the *Id* to "select_header".
+3. Set the *Font* to "headings".
+4. Set the *Text* to "SELECT LEVEL".
 
 <img src="doc/level_select.png" srcset="doc/level_select@2x.png 2x">
 
