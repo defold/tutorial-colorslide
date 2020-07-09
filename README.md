@@ -195,7 +195,7 @@ end
 2. Showing and hiding the GUI is triggered via messaging so it can be done from other scripts.
 3. React to the pressing of touch input (as already set up in the [input bindings](defold://open?path=/input/game.input_binding)).
 4. The button nodes are named "level_1" to "level_4" so they can be looped over.
-5. Check if the touch action happens within the boundaries of node "level_n". This means that the click happenen on the button.
+5. Check if the touch action happens within the boundaries of node "level_n". This means that the click happened on the button.
 6. Send a message to the loader script to load level `n`. Notice that a "load" message is not sent directly to the proxy from here since this script does not deal with the rest of the proxy loading logic, as a reaction to "proxy_loaded".
 7. Hide this GUI.
 
