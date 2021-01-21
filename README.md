@@ -75,9 +75,9 @@ Now try to run the game.
 Unfortunately there is an instant error. The console says:
 
 ```
-ERROR:GAMEOBJECT: The collection 'default' could not be created since there is 
-already a socket with the same name.
-WARNING:RESOURCE: Unable to create resource: /main/level_1/level_1.collectionc
+ERROR:GAMEOBJECT: The collection 'default' could not be created since there is already a socket with the same name.
+ERROR:GAMEOBJECT: AcquireResources NewCollection RESULT_OUT_OF_RESOURCES
+WARNING:RESOURCE: Unable to create resource: /main/level_1/level_1.collectionc: OUT_OF_RESOURCES
 ERROR:GAMESYS: The collection /main/level_1/level_1.collectionc could not be loaded.
 ```
 
@@ -123,7 +123,7 @@ Test that each level loads by altering the proxy component you send the "load" m
 
 ## The level selection screen
 
-Now you have built the setup required to load any at any moment so it is time to construct an interface to the level loading.
+Now you have built the setup required to load any level at any moment so it is time to construct an interface to the level loading.
 
 Create a new GUI file and call it "level_select.gui".
 
