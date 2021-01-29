@@ -51,6 +51,8 @@ Add a collection proxy component to the game object, name it "proxy_level_1" and
 
 Add a new script file called "loader.script" and add it as a script component to the "loader" game object.
 
+NOTE: The Defold editor will automatically add `.script` to the filename you provide. Make sure to only type in `loader` as name in the New Script popup.
+
 <img src="doc/main_proxy.png" srcset="doc/main_proxy@2x.png 2x">
 
 Open "loader.script" and change its content to the following:
