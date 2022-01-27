@@ -419,6 +419,8 @@ end
 
 And that's it. You are done! Run the game and verify that everything works as expected.
 
+The full source code for the project at this stage can be found in the [tutorial-done branch](https://github.com/defold/tutorial-colorslide/tree/tutorial-done).
+
 ## What next?
 
 This GUI implementation is pretty simple. Each screen deals with its own state and contains the code to hand over control to the next screen by sending messages to the other GUI component.
