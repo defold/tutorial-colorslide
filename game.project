@@ -15,3 +15,5 @@ max_count = 512
 [physics]
 debug = 1
 
+[script]
+shared_state = 1
