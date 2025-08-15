@@ -17,7 +17,7 @@ After having finished the tutorial, you will have accomplished the following:
 
 ## Understanding the game setup
 
-Before beginning the tutorial, [try running the game](defold://build), then open ["main.collection"](defold://open?path=/main/main.collection) to see how the game is set up.
+Before beginning the tutorial, [try running the game](defold://project.build), then open ["main.collection"](defold://open?path=/main/main.collection) to see how the game is set up.
 
 <img src="doc/main_collection.png" srcset="doc/main_collection@2x.png 2x">
 
