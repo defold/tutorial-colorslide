@@ -25,7 +25,7 @@ Before beginning the tutorial, [build and run](defold://project.build) the game 
 
 Tip: When you have this tutorial `README.md` file opened in the Defold Editor, you can use the links in here to perform certain actions, like running the game via the link above, or opening a file.
 
-<img src="doc/1_run_game.png">
+<img src="doc/2.png">
 
 Try clicking one of these colored faces with the left mouse button to move them to the free space. To complete the level, move all the colored faces to the cells wherein their color matches with them.
 
@@ -44,7 +44,7 @@ Find the file called [`main.collection`](defold://open?path=/main/main.collectio
 
 You can always open any file with the menu item <kbd>File</kbd> ▸ <kbd>Open...</kbd> or shortcut <kbd>Ctrl</kbd>+<kbd>P</kbd> (<kbd>Cmd</kbd>+<kbd>P</kbd> on Mac) and start typing the word "main" to search among all the available assets.
 
-<img src="doc/2_open_file.png">
+<img src="doc/3.png">
 
 You can also go to the <kbd>Assets</kbd> menu on the left side and find it on your own: Select the folder with the project name `main` (by clicking the ► icon once or double-clicking the name with <kbd>left mouse button</kbd>), and open <kbd>`main.collection`</kbd> (double-click on its name or right click and select <kbd>Open</kbd>).
 
@@ -55,7 +55,7 @@ It might be convenient for this tutorial to split the Code Editor into two panes
 1. <kbd>Right click</kbd> on the file tab.
 2. Select <kbd>Move to Other Tab Pane</kbd>.
 
-<img src="doc/3_two_panes.png">
+<img src="doc/4.png">
 
 ### Investigate the level collection
 
@@ -70,7 +70,7 @@ Currently, the level is launched in a subcollection called <kbd>level</kbd> (whi
     
 The `board` game object contains a tilemap component (named here `tiles`), which is a grid of square tiles. Open the [`tilemap`](defold://open?path=/main/level_2/level_2.tilemap) and notice that there are two layers on the tilemap, one is the actual playfield (with the <kbd>board</kbd> layer ID) and one contains the initial setup for the bricks (with <kbd>setup</kbd> layer ID). You can switch their visibility by clicking the eye icon next to them in the Outline.
 
-<img src="doc/4_visibility.png">
+<img src="doc/5.png">
 
 Leave the layers visible at the end.
 
@@ -94,7 +94,7 @@ Now try to change the current level to the other one!
 4. Save all (Ctrl+S / Cmd+S) by selecting <kbd>File</kbd> ▸ <kbd>Save All</kbd> in the menu or shortcut <kbd>Ctrl</kbd>+<kbd>S</kbd> (<kbd>Cmd</kbd>+<kbd>S</kbd> on Mac)
 5. Build and run the game again by selecting <kbd>Project</kbd> ▸ <kbd>Build</kbd> in the menu or shortcut <kbd>Ctrl</kbd>+<kbd>B</kbd> (<kbd>Cmd</kbd>+<kbd>B</kbd> on Mac).
 
-<img src="doc/5_change_level.png">
+<img src="doc/6.png">
 
 Now you should see a very different look of the level! Try to experiment with the other levels (from 1 to 4).
 
@@ -116,7 +116,7 @@ You should check out our manual about [collection proxies](https://defold.com/ma
 
 3. After that, go to the <kbd>Properties</kbd> pane, find the field with <kbd>Id</kbd> name and type in the text field <kbd>loader</kbd>. Make sure you didn't leave a typo - the name must be the same, because we'll reference it in code later on.
 
-<img src="doc/6_replace_with_game_object.png">
+<img src="doc/7.png">
 
 ### Adding a Collection Proxy component
 
@@ -124,8 +124,9 @@ You should check out our manual about [collection proxies](https://defold.com/ma
     ```lua
     /main/level_1/level_1.collection
     ```
+2. Repeat the step 1 for 4 levels - creating collection proxies for each.
 
-<img src="doc/7_add_collection_proxy_component.png">
+<img src="doc/8.png">
 
 ### Creating a script to handle loading
 
@@ -134,7 +135,7 @@ Here we need to add a new script to the project to complete this step. Do the fo
 1. From <kbd>Assets</kbd> menu, right click the <kbd>main</kbd> folder and select <kbd>New</kbd> ▸ <kbd>Script</kbd>.
 2. Name it <kbd>loader</kbd> and click <kbd>Create Script</kbd> or press <kbd>Enter</kbd>. You can skip extension (`.script`), it will be automatically added by Defold.
 
-<img src="doc/8_add_new_script_file.png">
+<img src="doc/9.png">
 
 3. The script will be opened in a built-in Code Editor. Remove all its content and paste this code:
 
@@ -161,7 +162,7 @@ If you need additional information about [how the messaging system works in Defo
 
 2. Add this script to the made collection proxy (right click ▸ <kbd>Add Component File</kbd> and select the `loader.script`).
 
-<img src="doc/9_add_script_to_collection.png">
+<img src="doc/10.png">
 
 
 ### Reading errors
@@ -185,12 +186,11 @@ This error occurs because the proxy tries to create a new world (socket) with th
 2. Click on the root of the collection <kbd>Collection</kbd> in the <kbd>Outline</kbd>.
 3. In the <kbd>Properties</kbd> pane. <kbd>Name</kbd> property and set it to `level_1`.
 4. Click outside the text field to stop editing it.
-
-Analogically, rename the rest of the collections: [`level_2.collection`](defold://open?path=/main/level_2/level_2.collection), [`level_3.collection`](defold://open?path=/main/level_3/level_3.collection) and [`level_4.collection`](defold://open?path=/main/level_4/level_4.collection).
+5. Repeat the steps 1-4 analogically for the rest: rename the collections: [`level_2.collection`](defold://open?path=/main/level_2/level_2.collection), [`level_3.collection`](defold://open?path=/main/level_3/level_3.collection) and [`level_4.collection`](defold://open?path=/main/level_4/level_4.collection).
 
 TODO: Verify if level_4 can have a name default in the beginning of the tutorial!
 
-<img src="doc/10_change_collection_name.png">
+<img src="doc/11.png">
 
 ### Problem with inputs
 
@@ -238,7 +238,7 @@ Before, make sure you changed the <kbd>Name</kbd> property of **all** collection
 2. Change the <kbd>proxy_level_</kbd> to <kbd>proxy_level_4</kbd>, as all other copies increase the last number automatically when pasted, so the rest should be respectively `proxy_level_2` and `proxy_level_3`.
 3. For each collection proxy number `X` change the `Collection` property to the coresponding `level_X.collection`, where X is a number (2-4), so that <kbd>proxy_level_2</kbd> has Collection <kbd>level_2</kbd>, and so on.
 
-<img src="doc/11_proxies.png">
+<img src="doc/12.png">
 
 4. Test that each level loads by altering the proxy component you send the "load" message by altering `msg.post("#proxy_level_X", "load")` line where `X` is the number from 1 to 4 in the [`loader.script`](defold://open?path=/main/loader.script). Don't forget to save each time before running the game.
 
@@ -260,16 +260,14 @@ First, let's create a new GUI - a Graphical User Interface, which is a component
 
 1. In <kbd>Assets</kbd> pane - inside of the <kbd>main</kbd> folder - create a new GUI file (right click on the folder ▸ <kbd>New</kbd> ▸ <kbd>GUI</kbd>) and name it <kbd>level_select</kbd>.
 
-<img src="doc/12_add_gui.png">
+<img src="doc/13.png">
 
 2. It will be opened in the GUI editor, look at the <kbd>Outline</kbd> pane.
 3. Add the `bricks` atlas to the <kbd>Textures</kbd> section (right click on <kbd>Textures</kbd> ▸ <kbd>Add</kbd> ▸ <kbd>Textures</kbd> ▸ select `/assets/bricks.atlas`).
 
-<img src="doc/13_add_atlas.png">
+<img src="doc/14.png">
 
 4. Similarly, add the <kbd>headings</kbd> font to the <kbd>Fonts</kbd> section (right click on <kbd>Fonts</kbd> ▸ <kbd>Add</kbd> ▸ <kbd>Fonts</kbd> ▸ select `/assets/headings.font`).
-
-<img src="doc/14_font.png">
 
 If you are interested in more detailed information about [atlases](https://defold.com/manuals/atlas/) and [fonts](https://defold.com/manuals/font/) in Defold, check out the manuals.
 
@@ -283,7 +281,7 @@ While being in the created GUI file, do the following steps:
 
 1. Create `Box` node (right click on <kbd>Nodes</kbd> ▸ <kbd>Add</kbd> ▸ <kbd>Box</kbd>)
 
-<img src="doc/15_add_gui_box.png">
+<img src="doc/15.png">
 
 2. Go to <kbd>Properties</kbd> menu.
 3. Set <kbd>Id</kbd> property of the created box nodes to `button_level_1`.
@@ -299,7 +297,7 @@ While being in the created GUI file, do the following steps:
 6. Set <kbd>Size</kbd> property to: (X: <kbd>150</kbd>, Y: <kbd>100</kbd>, Z: <kbd>0</kbd>).
 7. Set <kbd>Alpha</kbd> property to <kbd>0</kbd> (you can type manually or drag the slider to the left).
 
-<img src="doc/16_buttons.png">
+<img src="doc/16.png">
 
 Check out our manual about [GUI scenes](https://defold.com/manuals/gui/) if you need some more information about how to use it.
 
@@ -320,7 +318,7 @@ For each of the created buttons do the following steps (or do it once for the fi
 7. Set <kbd>Slice-9</kbd> property to: (L: <kbd>40</kbd>, T: <kbd>40</kbd>, R: <kbd>40</kbd>, B: <kbd>40</kbd>). This is important to type because it will cause adjusting the sprite's edges so it won't be stretched.
 8. Uncheck <kbd>Inherit Alpha</kbd> property so it renders even if its parent is transparent.
 
-<img src="doc/17_buttons_visuals.png">
+<img src="doc/17.png">
 
 If you need more detailed information about [how the slice-9 sprites](https://defold.com/examples/gui/slice9/) work in Defold, check out the manual page.
 
@@ -337,7 +335,7 @@ For each of the created now buttons do the following steps (or do it once for th
 5. Set <kbd>Text</kbd> property to `X` (where `X` is the number from 1 to 4).
 6. Set <kbd>Font</kbd> property to `headings`.
 
-<img src="doc/18_buttons_texts.png">
+<img src="doc/18.png">
 
 We have prepared everything we need to display the buttons!
 
@@ -355,7 +353,7 @@ The header text is the last thing we need to complete creating the GUI!
 
 That's it! You should have everything setup as on this image:
 
-<img src="doc/19_header.png">
+<img src="doc/19.png">
 
 Now we're going to add extra code to make it work!
 
@@ -415,7 +413,7 @@ Now we need to attach the GUI script to the GUI:
 1. Go to the created GUI and select its root "GUI" to display its properties.
 2. In the <kbd>Properties</kbd> pane find the <kbd>Script</kbd> property and set it to <kbd>`main/level_select.gui_script`</kbd>.
 
-<img src="doc/20_gui_script.png">
+<img src="doc/20.png">
 
 To finish off this step, the loader script needs a bit of new code to react to the `load_level` message, and the proxy loading on init should be removed.
 
@@ -456,6 +454,8 @@ Do the following steps:
 2. Add a new game object to it and name it <kbd>guis</kbd>.
 3. Right click on this game object, click <kbd>Add Component File</kbd>, and select `main/level_select.gui`).
 
+<img src="doc/21.png">
+
 Save all, run the game and test the level selector screen. You should be able to click any of the level buttons and the corresponding level will load and be playable. Great!
 
 ## Adding the GUI to the level
@@ -484,7 +484,7 @@ We only need one button - to get back to the `level_select` GUI. So remove the r
 5. Select and rename the child text node `button_level_1_text` to <kbd>`button_back_text`</kbd>.
 6. Change the "Text" property of the `button_back_text` text node to <kbd>`Back`</kbd>.
 
-<img src="doc/22_button_back.png">
+<img src="doc/22.png">
 
 ### Adding a level number information
 
@@ -495,7 +495,7 @@ Now, we'll reuse the "SELECT LEVEL" text node:
 3. Change the "Size" property to: (X: <kbd>180</kbd>, Y: <kbd>64</kbd>, Z: <kbd>0</kbd>).
 4. Change the "Text" property of this node to <kbd>`LEVEL 1`</kbd>.
 
-<img src="doc/23_level_number.png">
+<img src="doc/23.png">
 
 Now we need to add a message for level complete with a "well done" message and a button to advance to the next level.
 
@@ -510,7 +510,7 @@ While being in the created root node, do the following:
 5. Set <kbd>Size</kbd> property to: (X: <kbd>650</kbd>, Y: <kbd>350</kbd>, Z: <kbd>0</kbd>).
 6. Set <kbd>Color</kbd> property to `#cccccc` (you can type it manually or select the color picker to the right and click on the cell in the second row and fourth column).
 
-<img src="doc/24_end_screen.png">
+<img src="doc/24.png">
 
 We have a background. Now the rest of the elements!
 
@@ -526,7 +526,7 @@ To create a text as a child of our `well_done_message` node, follow these steps:
 7. Set <kbd>Font</kbd> property to `headings`.
 8. Set <kbd>Color</kbd> property to `#000000` (you can type it manually or select the color picker to the right and click on the cell in the second row and the last column to the right).
 
-<img src="doc/25_end_message.png">
+<img src="doc/25.png">
 
 The last thing to do is the button to proceed to the next level.
 
@@ -543,7 +543,7 @@ We will again reuse the existing button, that we created:
 7. Rename the <kbd>Id</kbd> property of the child `button_back_text1` to <kbd>`button_next_text`</kbd>.
 5. Change the <kbd>Text</kbd> property of the <kbd>`button_next_text`</kbd> text node to <kbd>`Next`</kbd>.
 
-<img src="doc/26_next_button.png">
+<img src="doc/26.png">
 
 Usually, GUI might have a lot of elements that could be reused, like the buttons we are copying. In Defold, you can maintain such similar elements in the GUI using the [templates](https://defold.com/manuals/gui-template/). We are not using them in this tutorial, but we recommend to check out the manual later on.
 
@@ -591,7 +591,7 @@ Now we need to attach the GUI Script to the GUI:
 1. Go to the created [`level.gui`](defold://open?path=/main/level.gui) and select "GUI" to display its properties.
 2. In the <kbd>Properties</kbd> pane change the <kbd>Script</kbd> property to `main/level.gui_script`.
 
-<img src="doc/27_gui_script.png">
+<img src="doc/27.png">
 
 If you need more information about [how addressing works in Defold](https://defold.com/manuals/addressing/), be sure to check out the manual.
 
@@ -667,7 +667,7 @@ We also need to make additional changes to the already existing game objects. Do
 2. Right click on this game object and <kbd>Add Component File</kbd> ▸ <kbd>`level.gui`</kbd>.
 3. Set its <kbd>Id</kbd> property to `gui`.
 
-<img src="doc/28_gui_component.png">
+<img src="doc/28.png">
 
 Run the game. You should be able to select a game, go back to the level selection screen (with the <kbd>Back</kbd> button) and also start the next level when one is finished.
 
@@ -685,7 +685,7 @@ We will once again duplicate the GUI, this time, copy and paste the [`level.gui`
     - Change the <kbd>Position</kbd> property of the `welcome` to (X: <kbd>320</kbd>, Y: <kbd>568.0</kbd>, Z: <kbd>0</kbd>).
     - Change the <kbd>Size</kbd> property of the `welcome` to (X: <kbd>650</kbd>, Y: <kbd>1150.0</kbd>, Z: <kbd>0</kbd>).
 
-    <img src="doc/29_start_screen.png">
+    <img src="doc/29.png">
 
 4. Delete the child node `well_done_message_text`.
 5. Change the button `button_next` node:
@@ -694,7 +694,7 @@ We will once again duplicate the GUI, this time, copy and paste the [`level.gui`
     - Rename the `button_next_text` to <kbd>`button_start_text`</kbd>.
     - Change the <kbd>Text</kbd> property of the `button_start_text` to <kbd>`Start`</kbd>.
 
-    <img src="doc/30_start_button.png">
+    <img src="doc/30.png">
 
 5. Add a logo:
     - Add a new `Box` node (right click on the <kbd>`welcome`</kbd> node and select <kbd>Add</kbd> ▸ <kbd>Box</kbd>)
@@ -703,7 +703,7 @@ We will once again duplicate the GUI, this time, copy and paste the [`level.gui`
     - Change the <kbd>Scale</kbd> property of the `logo` to (X: <kbd>0.5</kbd>, Y: <kbd>0.5</kbd>, Z: <kbd>1.0</kbd>).
     - Change the <kbd>Texture</kbd> property of the `logo` to <kbd>`bricks/logo`</kbd>.
 
-    <img src="doc/31_logo.png">
+    <img src="doc/31.png">
 
 This is the end of creating the start GUI!
 
@@ -751,7 +751,7 @@ Now we need to add some code to make it work!
 4. Go to the created [`start.gui`](defold://open?path=/main/start.gui) and select "GUI" to display its properties.
 5. In the <kbd>Properties</kbd> set the <kbd>Script</kbd> property to `main/start.gui_script`.
 
-    <img src="doc/32_attaching_gui_script.png">
+    <img src="doc/32.png">
 
 ## Adding transition between the start and level select
 
@@ -760,7 +760,7 @@ The last thing is to connect this screen with the level select! Do the following
 1. Go to the ["main.collection"](defold://open?path=/main/main.collection).
 2. Add `start.gui` to the `guis` game object (right click on `guis` game object ▸ <kbd>Add Component File</kbd> ▸ select `main/start.gui.gui`).
 
-    <img src="doc/33_start_gui.png">
+    <img src="doc/33.png">
 
 
 Save all and try your game - it should now welcome you with a start screen and you can click "Start" to proceed to the level selection!
@@ -776,7 +776,7 @@ We don't have a back button in the level selection GUI, because we didn't need i
 3. Open ["level_select.gui"](defold://open?path=/main/level_select.gui).
 4. Paste the button (with its children) to the root "Nodes".
 
-    <img src="doc/34_copy_back_button.png">
+    <img src="doc/34.png">
 
 Now we only need to add code to handle the back button in the level selection:
 
@@ -808,7 +808,7 @@ Now we only need to add code to handle the back button in the level selection:
     1. Check if the player clicks "back". If so, hide this GUI and show the start screen.
 
 
-3. In the `init` function hange line 3: <kbd>`msg.post("#", "show_level_select")`</kbd> to: <kbd>`msg.post("#", "hide_level_select")`</kbd>,
+3. In the `init` function change line 3: <kbd>`msg.post("#", "show_level_select")`</kbd> to: <kbd>`msg.post("#", "hide_level_select")`</kbd>,
 
     ```lua
     function init(self)
