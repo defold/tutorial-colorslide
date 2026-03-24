@@ -139,7 +139,7 @@ nodes {
     y: 100.0
   }
   type: TYPE_TEXT
-  text: "Text"
+  text: "Next"
   font: "headings"
   id: "button_next_text"
   parent: "button_next_bg"
