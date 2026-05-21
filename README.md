@@ -188,8 +188,6 @@ This error occurs because the proxy tries to create a new world (socket) with th
 4. Click outside the text field to stop editing it.
 5. Repeat the steps 1-4 analogically for the rest: rename the collections: [`level_2.collection`](defold://open?path=/main/level_2/level_2.collection), [`level_3.collection`](defold://open?path=/main/level_3/level_3.collection) and [`level_4.collection`](defold://open?path=/main/level_4/level_4.collection).
 
-TODO: Verify if level_4 can have a name default in the beginning of the tutorial!
-
 <img src="doc/11.png">
 
 ### Problem with inputs
